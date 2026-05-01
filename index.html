@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>特別限定プランのご案内</title>
+    <style>
+        /* ベースデザイン */
+        body { font-family: -apple-system, "Helvetica Neue", Arial, sans-serif; padding: 20px; background-color: #f4f4f4; color: #333; line-height: 1.6; }
+        .container { background: #fff; padding: 25px 20px; border-radius: 15px; max-width: 450px; margin: auto; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+        
+        h2 { font-size: 18px; text-align: center; color: #00b900; border-bottom: 3px solid #00b900; padding-bottom: 12px; margin-bottom: 20px; margin-top: 0; }
+        
+        /* お知らせエリア */
+        .notice-box { background-color: #fff5f5; border: 1px solid #feb2b2; padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 14px; }
+        .notice-title { color: #c53030; font-weight: bold; display: block; margin-bottom: 5px; }
+
+        /* プラン詳細エリア */
+        .plan-section { margin-bottom: 20px; }
+        .plan-card { background-color: #fafafa; border: 1px solid #eee; border-radius: 10px; padding: 15px; margin-bottom: 15px; }
+        .label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 14px; color: #00b900; }
+        
+        .point-item { display: flex; align-items: flex-start; margin-bottom: 10px; font-size: 14px; }
+        .point-item:before { content: "✔"; color: #00b900; margin-right: 8px; font-weight: bold; }
+
+        /* 時間帯の視覚化 */
+        .time-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 5px; }
+        .time-table td { padding: 8px; border-bottom: 1px solid #eee; }
+        .day-label { font-weight: bold; width: 35%; }
+        .time-range { color: #00b900; font-weight: bold; text-align: right; }
+
+        /* ボタンデザイン */
+        .btn-group { margin-top: 30px; }
+        .btn-reserve { background-color: #00b900; color: white; border: none; padding: 18px; width: 100%; border-radius: 10px; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,185,0,0.2); transition: 0.2s; }
+        .btn-reserve:active { opacity: 0.8; transform: scale(0.98); }
+        .btn-cancel { background-color: #f4f4f4; color: #666; border: 1px solid #ddd; padding: 12px; width: 100%; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: 0.2s; }
+        .btn-cancel:active { background-color: #eee; }
+        
+        .footer-note { font-size: 11px; color: #888; text-align: center; margin-top: 20px; }
+        .highlight { color: #d32f2f; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>特別限定プランのご案内</h2>
+    
+    <p style="font-size: 13px; margin-bottom: 15px;">
+        お問合せありがとうございます。<br>
+        誠に恐れ入りますが下記をご確認ください。
+    </p>
+
+    <div class="notice-box">
+        <span class="notice-title">【通常24時間プラン 募集停止中】</span>
+        現会員の方達の利便性を守るため、混雑防止として新規受付を停止しております。再開目途は未定です。
+    </div>
+
+    <p style="font-size: 13px; margin-bottom: 15px;">
+        いつまでも停止のままでは申し訳ないため、入店時間を制限したプランをご用意いたしました。
+    </p>
+
+    <div class="plan-section">
+        <span class="label">入店可能時間の目安</span>
+        <div class="plan-card" style="padding: 10px 15px;">
+            <table class="time-table">
+                <tr>
+                    <td class="day-label">月曜 〜 金曜</td>
+                    <td class="time-range">22:00 〜 15:00</td>
+                </tr>
+                <tr>
+                    <td class="day-label">土曜 ＆ 日曜</td>
+                    <td class="time-range">18:00 〜 06:00</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="plan-section">
+        <span class="label">特別限定プランの内容</span>
+        <div class="plan-card">
+            <div class="point-item">混雑していない時間帯に入店可能</div>
+            <div class="point-item">月会費は一律 <span class="highlight">1,500円</span>（限定価格）</div>
+            <div class="point-item"><span class="highlight">継続5ヶ月以降</span>は24時間プランへ変更可</div>
+            <p style="font-size: 11px; color: #666; margin-left: 20px; margin-top: 5px;">
+                ※変更時は要連絡。限定プランの継続も可能です。
+            </p>
+        </div>
+    </div>
+
+    <div class="btn-group">
+        <button class="btn-reserve" onclick="sendResult('reserve')">特別限定プランで予約</button>
+        <button class="btn-cancel" onclick="sendResult('cancel')">今回はキャンセルする</button>
+    </div>
+
+    <div class="footer-note">
+        ※ボタンを押すとメッセージが自動送信されます。
+    </div>
+</div>
+
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<script>
+    const LIFF_ID = "2009898612-Ur8HyS7F"; 
+
+    liff.init({ liffId: LIFF_ID }).then(() => {
+        if (!liff.isLoggedIn()) { liff.login(); }
+    }).catch((err) => { console.error(err); });
+
+    function sendResult(type) {
+        let msg = (type === 'reserve') 
+            ? "特別限定プランで予約" 
+            : "今回はキャンセルする";
+
+        liff.sendMessages([{
+            type: 'text',
+            text: msg
+        }]).then(() => {
+            liff.closeWindow();
+        }).catch((err) => {
+            alert("送信に失敗しました。LINEアプリから操作してください。");
+        });
+    }
+</script>
+
+</body>
+</html>
