@@ -11,33 +11,42 @@
         
         h2 { font-size: 18px; text-align: center; color: #00b900; border-bottom: 3px solid #00b900; padding-bottom: 12px; margin-bottom: 20px; margin-top: 0; }
         
-        /* お知らせエリア */
+        /* お知らせ・プラン詳細の枠 */
         .notice-box { background-color: #fff5f5; border: 1px solid #feb2b2; padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 14px; }
         .notice-title { color: #c53030; font-weight: bold; display: block; margin-bottom: 5px; }
 
-        /* プラン詳細エリア */
-        .plan-section { margin-bottom: 20px; }
+        .plan-section { margin-bottom: 20px; text-align: left; }
         .plan-card { background-color: #fafafa; border: 1px solid #eee; border-radius: 10px; padding: 15px; margin-bottom: 15px; }
-        .label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 14px; color: #00b900; }
         
+        /* 緑色のタイトルをセンターへ */
+        .label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 14px; color: #00b900; text-align: center; }
+
+        /* --- CSSグラフ：スマホ最適化 --- */
+        .chart-container { margin-top: 10px; background: #fff; padding: 12px; border-radius: 8px; border: 1px solid #eee; }
+        .chart-row { margin-bottom: 20px; }
+        .day-title { font-size: 13px; font-weight: bold; margin-bottom: 8px; display: block; }
+        
+        .bar-wrapper { position: relative; height: 35px; background: #e0e0e0; border-radius: 6px; overflow: hidden; display: flex; }
+        /* バー内の文字を消去 */
+        .bar-blue { background: #5a9bd5; height: 100%; display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; font-weight: bold; }
+        
+        .time-labels { display: flex; justify-content: space-between; font-size: 11px; color: #888; margin-top: 5px; position: relative; height: 15px; }
+        
+        .legend { font-size: 11px; margin-top: 15px; display: flex; gap: 15px; justify-content: center; border-top: 1px solid #eee; padding-top: 10px; }
+        .legend-item { display: flex; align-items: center; gap: 5px; }
+        .dot { width: 12px; height: 12px; border-radius: 3px; }
+
+        /* リスト項目 */
         .point-item { display: flex; align-items: flex-start; margin-bottom: 10px; font-size: 14px; }
         .point-item:before { content: "✔"; color: #00b900; margin-right: 8px; font-weight: bold; }
 
-        /* 時間帯の視覚化 */
-        .time-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 5px; }
-        .time-table td { padding: 8px; border-bottom: 1px solid #eee; }
-        .day-label { font-weight: bold; width: 35%; }
-        .time-range { color: #00b900; font-weight: bold; text-align: right; }
-
-        /* ボタンデザイン */
+        /* ボタン */
         .btn-group { margin-top: 30px; }
-        .btn-reserve { background-color: #00b900; color: white; border: none; padding: 18px; width: 100%; border-radius: 10px; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,185,0,0.2); transition: 0.2s; }
-        .btn-reserve:active { opacity: 0.8; transform: scale(0.98); }
-        .btn-cancel { background-color: #f4f4f4; color: #666; border: 1px solid #ddd; padding: 12px; width: 100%; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: 0.2s; }
-        .btn-cancel:active { background-color: #eee; }
+        .btn-reserve { background-color: #00b900; color: white; border: none; padding: 18px; width: 100%; border-radius: 12px; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,185,0,0.2); }
+        .btn-cancel { background-color: #fff; color: #666; border: 1px solid #ddd; padding: 14px; width: 100%; border-radius: 12px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 15px; }
         
-        .footer-note { font-size: 11px; color: #888; text-align: center; margin-top: 20px; }
         .highlight { color: #d32f2f; font-weight: bold; }
+        .footer-note { font-size: 11px; color: #999; text-align: center; margin-top: 20px; }
     </style>
 </head>
 <body>
@@ -45,14 +54,9 @@
 <div class="container">
     <h2>特別限定プランのご案内</h2>
     
-    <p style="font-size: 13px; margin-bottom: 15px;">
-        お問合せありがとうございます。<br>
-        誠に恐れ入りますが下記をご確認ください。
-    </p>
-
     <div class="notice-box">
         <span class="notice-title">【通常24時間プラン 募集停止中】</span>
-        現会員の方達の利便性を守るため、混雑防止として新規受付を停止しております。再開目途は未定です。
+        現会員の方達の利便性を守るため、24時間プランの新規受付を停止しております。
     </div>
 
     <p style="font-size: 13px; margin-bottom: 15px;">
@@ -61,17 +65,43 @@
 
     <div class="plan-section">
         <span class="label">入店可能時間の目安</span>
-        <div class="plan-card" style="padding: 10px 15px;">
-            <table class="time-table">
-                <tr>
-                    <td class="day-label">月曜 〜 金曜</td>
-                    <td class="time-range">22:00 〜 15:00</td>
-                </tr>
-                <tr>
-                    <td class="day-label">土曜 ＆ 日曜</td>
-                    <td class="time-range">18:00 〜 06:00</td>
-                </tr>
-            </table>
+        <p style="font-size: 14px; margin-bottom: 10px; font-weight: bold; text-align: center;">
+            月曜 〜 金曜：22:00 〜 15:00<br>
+            土曜 ＆ 日曜：18:00 〜 06:00
+        </p>
+
+        <div class="chart-container">
+            <div class="chart-row">
+                <span class="day-title">月曜 〜 金曜 スケジュール</span>
+                <div class="bar-wrapper">
+                    <div style="width: 62.5%;" class="bar-blue"></div>
+                    <div style="width: 29.1%;"></div>
+                    <div style="width: 8.4%;" class="bar-blue"></div>
+                </div>
+                <div class="time-labels">
+                    <span>0:00</span>
+                    <span style="position: absolute; left: 62.5%; transform: translateX(-50%);">15:00</span>
+                </div>
+            </div>
+
+            <div class="chart-row">
+                <span class="day-title">土曜 ＆ 日曜 スケジュール</span>
+                <div class="bar-wrapper">
+                    <div style="width: 25%;" class="bar-blue"></div>
+                    <div style="width: 50%;"></div>
+                    <div style="width: 25%;" class="bar-blue"></div>
+                </div>
+                <div class="time-labels">
+                    <span>0:00</span>
+                    <span style="position: absolute; left: 25%; transform: translateX(-50%);">6:00</span>
+                    <span style="position: absolute; left: 75%; transform: translateX(-50%);">18:00</span>
+                </div>
+            </div>
+
+            <div class="legend">
+                <div class="legend-item"><div class="dot" style="background:#5a9bd5"></div>利用可能</div>
+                <div class="legend-item"><div class="dot" style="background:#e0e0e0"></div>入店不可</div>
+            </div>
         </div>
     </div>
 
@@ -92,34 +122,26 @@
         <button class="btn-cancel" onclick="sendResult('cancel')">今回はキャンセルする</button>
     </div>
 
-    <div class="footer-note">
-        ※ボタンを押すとメッセージが自動送信されます。
-    </div>
+    <p class="footer-note">※滞在時間に制限はありません。入店時間のみの制限です。</p>
 </div>
 
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 <script>
-    const LIFF_ID = "2009898612-pagkObQZ"; 
-
+    const LIFF_ID = "2009898612-Ur8HyS7F"; 
     liff.init({ liffId: LIFF_ID }).then(() => {
         if (!liff.isLoggedIn()) { liff.login(); }
-    }).catch((err) => { console.error(err); });
+    });
 
     function sendResult(type) {
-        let msg = (type === 'reserve') 
-            ? "特別限定プランで予約" 
-            : "今回はキャンセルする";
-
-        liff.sendMessages([{
-            type: 'text',
-            text: msg
-        }]).then(() => {
+        let msg = (type === 'reserve') ? "特別限定プランで予約" : "今回はキャンセルする";
+        liff.sendMessages([{ type: 'text', text: msg }]).then(() => {
             liff.closeWindow();
         }).catch((err) => {
             alert("送信に失敗しました。LINEアプリから操作してください。");
         });
     }
 </script>
-
+</body>
+</html>
 </body>
 </html>
