@@ -10,7 +10,6 @@
         
         h2 { font-size: 18px; text-align: center; color: #00b900; border-bottom: 3px solid #00b900; padding-bottom: 12px; margin-bottom: 20px; margin-top: 0; }
         
-        /* お知らせエリア：text-align: center; を追加 */
         .notice-box { 
             background-color: #fff5f5; 
             border: 1px solid #feb2b2; 
@@ -18,17 +17,15 @@
             border-radius: 10px; 
             margin-bottom: 20px; 
             font-size: 14px;
-            text-align: center; /* ← これで中の文字がすべてセンターになります */
+            text-align: center;
         }
         .notice-title { color: #c53030; font-weight: bold; display: block; margin-bottom: 5px; }
 
         .plan-section { margin-bottom: 20px; text-align: left; }
         .plan-card { background-color: #fafafa; border: 1px solid #eee; border-radius: 10px; padding: 15px; margin-bottom: 15px; }
         
-        /* 緑色のタイトルをセンターへ */
         .label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 14px; color: #00b900; text-align: center; }
 
-        /* グラフエリア */
         .chart-container { margin-top: 10px; background: #fff; padding: 12px; border-radius: 8px; border: 1px solid #eee; }
         .chart-row { margin-bottom: 20px; }
         .day-title { font-size: 13px; font-weight: bold; margin-bottom: 8px; display: block; }
@@ -56,12 +53,12 @@
     <h2>特別限定プランのご案内</h2>
     
     <div class="notice-box">
-        <span class="notice-title">【通常24時間プラン 募集停止中】</span>
-        現会員の方達の利便性を守るため、24時間プランの新規受付を停止しております。
+        <span class="notice-title">【通常24時間プラン募集停止中】</span>
+        現在、お問合せが多く、混雑してしまう時間帯があります。<br>現会員の方達の利便性を守るため、大変申し訳ありませんが24時間プランの新規受付を停止しております。
     </div>
 
     <p style="font-size: 13px; margin-bottom: 15px; text-align: center;">
-        いつまでも停止のままでは申し訳ないため、入店時間を制限したプランをご用意いたしました。
+        しかし、いつまでも停止のままでは申し訳ないため、入店時間を制限して会費を抑えたプランをご用意いたしました。<br>ご検討いただき、ご返答いただければ幸いです。
     </p>
 
     <div class="plan-section">
@@ -100,7 +97,7 @@
             </div>
 
             <div class="legend">
-                <div class="legend-item"><div class="dot" style="background:#5a9bd5"></div>利用可能</div>
+                <div class="legend-item"><div class="dot" style="background:#5a9bd5"></div>入店可能</div>
                 <div class="legend-item"><div class="dot" style="background:#e0e0e0"></div>入店不可</div>
             </div>
         </div>
@@ -144,7 +141,5 @@
         });
     }
 </script>
-</body>
-</html>
 </body>
 </html>
