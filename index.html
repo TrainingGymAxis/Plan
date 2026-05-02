@@ -13,9 +13,9 @@
             --bg-color: #fafafa;     
             --text-black: #000000;    
             --box-border: #ffd54f;   
-            --ryuken-color: #e53935; /* 流拳會 */
-            --zendo-color: #1e88e5;  /* 禅道会 */
-            --bushin-color: #43a047; /* 武心館 */
+            --ryuken-color: #e53935; 
+            --zendo-color: #1e88e5;  
+            --bushin-color: #43a047; 
         }
 
         body {
@@ -89,9 +89,9 @@
             box-sizing: border-box;
             font-size: 1rem;
             color: var(--text-black);
+            -webkit-appearance: none;
         }
 
-        /* 曜日の大きなラベル */
         .day-label {
             display: block;
             font-size: 1.15rem;
@@ -188,7 +188,7 @@
             max-width: 300px;
             text-align: center;
         }
-        .modal-message { font-weight: bold; margin-bottom: 20px; color: var(--text-black); }
+        .modal-message { font-weight: bold; margin-bottom: 20px; color: var(--text-black); white-space: pre-wrap; }
         .modal-btn {
             background: var(--primary-orange);
             color: #fff;
@@ -380,17 +380,35 @@
     function sendReservation() {
         const name = document.getElementById('childName').value;
         const age = document.getElementById('childAge').value;
-        const date = document.getElementById('visitDate').value;
-        const tel = document.getElementById('tel').value;
+        const dateVal = document.getElementById('visitDate').value;
+        const telVal = document.getElementById('tel').value;
         const locEl = document.querySelector('input[name="location"]:checked');
         const location = locEl ? locEl.value : '';
 
-        if (!name || !age || !date || !location || !tel) {
+        // 1. 未入力チェック
+        if (!name || !age || !dateVal || !location || !telVal) {
             showModal('すべての項目を入力・選択してください。', false);
             return;
         }
 
-        const details = `①お子さんの氏名：${name}\n②お子さんの年齢：${age}歳\n③希望日：${date}\n④希望場所・時間：${location}\n⑤ご連絡先：${tel}`;
+        // 2. 日付チェック（過去日不可）
+        const selectedDate = new Date(dateVal);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); 
+        if (selectedDate < today) {
+            showModal('正しい日にちを選んでください。', false);
+            return;
+        }
+
+        // 3. 電話番号チェック
+        const cleanTel = telVal.replace(/[^\d]/g, '');
+        const telPattern = /^0[789]0\d{8}$/;
+        if (!telPattern.test(cleanTel)) {
+            showModal('正しい番号をご入力ください。', false);
+            return;
+        }
+
+        const details = `①お子さんの氏名：${name}\n②お子さんの年齢：${age}歳\n③希望日：${dateVal}\n④希望場所・時間：${location}\n⑤ご連絡先：${telVal}`;
         const keyword = `【体験＆見学のご予約】`;
 
         liff.sendMessages([
