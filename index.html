@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>reservation</title>
+    <title>体験＆見学予約 | 浜松スポーツ少年団</title>
     <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <style>
         :root {
@@ -13,9 +13,9 @@
             --bg-color: #fafafa;     
             --text-black: #000000;    
             --box-border: #ffd54f;   
-            --ryuken-color: #e53935; /* 流拳會：赤 */
-            --zendo-color: #1e88e5;  /* 禅道会：青 */
-            --bushin-color: #43a047; /* 武心館：緑 */
+            --ryuken-color: #e53935; /* 流拳會 */
+            --zendo-color: #1e88e5;  /* 禅道会 */
+            --bushin-color: #43a047; /* 武心館 */
         }
 
         body {
@@ -42,6 +42,7 @@
             border-radius: 15px;
             border: 2px solid var(--box-border);
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            margin-bottom: 50px;
         }
 
         h2 {
@@ -70,15 +71,14 @@
             font-weight: bold;
         }
 
-        .form-group {
-            margin-bottom: 18px;
-        }
+        .form-group { margin-bottom: 18px; }
 
         label {
             display: block;
             font-weight: bold;
             margin-bottom: 8px;
             font-size: 0.95rem;
+            color: var(--text-black);
         }
 
         input[type="text"], input[type="number"], input[type="date"], input[type="tel"] {
@@ -88,37 +88,34 @@
             border-radius: 8px;
             box-sizing: border-box;
             font-size: 1rem;
+            color: var(--text-black);
         }
 
-        .day-group {
-            margin-bottom: 15px;
-            border-top: 1px solid #eee;
-            padding-top: 10px;
-        }
-        /* 曜日のスタイル修正 */
+        /* 曜日の大きなラベル */
         .day-label {
             display: block;
-            font-size: 1.1rem; /* サイズを少し大きくする */
-            color: var(--primary-orange); /* 見やすい色（オレンジ）に変える */
-            margin-bottom: 8px;
+            font-size: 1.15rem;
+            color: var(--primary-orange);
+            margin-bottom: 10px;
             font-weight: bold;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+            margin-top: 20px;
         }
 
         .class-option {
             position: relative;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             display: block;
         }
-        .class-option input[type="radio"] {
-            display: none;
-        }
+        .class-option input[type="radio"] { display: none; }
+        
         .class-card {
             display: block;
             padding: 12px;
             border: 2px solid #eee;
             border-radius: 10px;
             cursor: pointer;
-            transition: all 0.2s;
             background-color: #fff;
         }
         .class-option input[type="radio"]:checked + .class-card {
@@ -132,10 +129,8 @@
             align-items: center;
             margin-bottom: 4px;
         }
-        .class-name {
-            font-weight: bold;
-            font-size: 0.95rem;
-        }
+        .class-name { font-weight: bold; font-size: 0.95rem; }
+        
         .style-badge {
             font-size: 0.75rem;
             padding: 2px 8px;
@@ -146,11 +141,8 @@
         .badge-ryuken { background-color: var(--ryuken-color); }
         .badge-zendo { background-color: var(--zendo-color); }
         .badge-bushin { background-color: var(--bushin-color); }
-        
-        .class-time {
-            font-size: 0.85rem;
-            color: #555;
-        }
+
+        .class-time { font-size: 0.85rem; color: #555; }
 
         .note {
             font-size: 0.8rem;
@@ -159,9 +151,10 @@
             border: 1px dashed var(--primary-orange);
             margin-top: 20px;
             border-radius: 8px;
+            color: var(--text-black);
         }
 
-        button {
+        .submit-btn {
             width: 100%;
             padding: 16px;
             background-color: var(--primary-orange);
@@ -174,9 +167,36 @@
             margin-top: 20px;
             box-shadow: 0 4px 0 #bf6500;
         }
-        button:active {
-            transform: translateY(2px);
-            box-shadow: 0 2px 0 #bf6500;
+        .submit-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #bf6500; }
+
+        /* カスタムモーダル */
+        #customModal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background: #fff;
+            padding: 25px;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 300px;
+            text-align: center;
+        }
+        .modal-message { font-weight: bold; margin-bottom: 20px; color: var(--text-black); }
+        .modal-btn {
+            background: var(--primary-orange);
+            color: #fff;
+            border: none;
+            padding: 10px 40px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -213,124 +233,114 @@
 
         <div class="form-group">
             <label>体験希望の教室・時間を選んでください</label>
-            
-            <div class="day-group">
-                <span class="day-label">【火曜日】</span>
-                <label class="class-option">
-                    <input type="radio" name="location" value="火曜：積志協働センター【流拳會】（17:00-19:00）" required>
-                    <div class="class-card">
-                        <div class="class-header"><span class="class-name">積志協働センター</span><span class="style-badge badge-ryuken">流拳會</span></div>
-                        <div class="class-time">17:00〜19:00</div>
-                    </div>
-                </label>
-                <label class="class-option">
-                    <input type="radio" name="location" value="火曜：曳馬協働センター【禅道会】（17:30-18:30）">
-                    <div class="class-card">
-                        <div class="class-header"><span class="class-name">曳馬協働センター</span><span class="style-badge badge-zendo">禅道会</span></div>
-                        <div class="class-time">17:30〜18:30</div>
-                    </div>
-                </label>
-                <label class="class-option">
-                    <input type="radio" name="location" value="火曜：県居協働センター【武心館】（17:30-18:30）">
-                    <div class="class-card">
-                        <div class="class-header"><span class="class-name">県居協働センター</span><span class="style-badge badge-bushin">武心館</span></div>
-                        <div class="class-time">17:30〜18:30</div>
-                    </div>
-                </label>
-            </div>
 
-            <div class="day-group">
-                <span class="day-label">【水曜日】</span>
-                <label class="class-option">
-                    <input type="radio" name="location" value="水曜：西部協働センター【流拳會】（17:30-18:30）">
-                    <div class="class-card">
-                        <div class="class-header"><span class="class-name">西部協働センター</span><span class="style-badge badge-ryuken">流拳會</span></div>
-                        <div class="class-time">17:30〜18:30</div>
-                    </div>
-                </label>
-                <label class="class-option">
-                    <input type="radio" name="location" value="水曜：積志協働センター【武心館】（17:30-18:30）">
-                    <div class="class-card">
-                        <div class="class-header"><span class="class-name">積志協働センター</span><span class="style-badge badge-bushin">武心館</span></div>
-                        <div class="class-time">17:30〜18:30</div>
-                    </div>
-                </label>
-                <label class="class-option">
-                    <input type="radio" name="location" value="水曜：北部協働センター【禅道会】（17:30-18:30）">
-                    <div class="class-card">
-                        <div class="class-header"><span class="class-name">北部協働センター</span><span class="style-badge badge-zendo">禅道会</span></div>
-                        <div class="class-time">17:30〜18:30</div>
-                    </div>
-                </label>
-            </div>
+            <span class="day-label">【火曜日】</span>
+            <label class="class-option">
+                <input type="radio" name="location" value="火曜：積志協働センター【流拳會】（17:00-19:00）" required>
+                <div class="class-card">
+                    <div class="class-header"><span class="class-name">積志協働センター</span><span class="style-badge badge-ryuken">流拳會</span></div>
+                    <div class="class-time">17:00〜19:00</div>
+                </div>
+            </label>
+            <label class="class-option">
+                <input type="radio" name="location" value="火曜：曳馬協働センター【禅道会】（17:30-18:30）">
+                <div class="class-card">
+                    <div class="class-header"><span class="class-name">曳馬協働センター</span><span class="style-badge badge-zendo">禅道会</span></div>
+                    <div class="class-time">17:30〜18:30</div>
+                </div>
+            </label>
+            <label class="class-option">
+                <input type="radio" name="location" value="火曜：県居協働センター【武心館】（17:30-18:30）">
+                <div class="class-card">
+                    <div class="class-header"><span class="class-name">県居協働センター</span><span class="style-badge badge-bushin">武心館</span></div>
+                    <div class="class-time">17:30〜18:30</div>
+                </div>
+            </label>
 
-            <div class="day-group">
-                <span class="day-label">【木曜日】</span>
-                <label class="class-option">
-                    <input type="radio" name="location" value="木曜：白脇協働センター【流拳會】（17:30-18:30）">
-                    <div class="class-card">
-                        <div class="class-header"><span class="class-name">白脇協働センター</span><span class="style-badge badge-ryuken">流拳會</span></div>
-                        <div class="class-time">17:30〜18:30</div>
-                    </div>
-                </label>
-                <label class="class-option">
-                    <input type="radio" name="location" value="木曜：長鶴町道場【武心館】（18:00-19:00）">
-                    <div class="class-card">
-                        <div class="class-header"><span class="class-name">長鶴町道場</span><span class="style-badge badge-bushin">武心館</span></div>
-                        <div class="class-time">18:00〜19:00</div>
-                    </div>
-                </label>
-                <label class="class-option">
-                    <input type="radio" name="location" value="木曜：大平台小学校体育館【禅道会】（18:30-19:30）">
-                    <div class="class-card">
-                        <div class="class-header"><span class="class-name">大平台小学校体育館</span><span class="style-badge badge-zendo">禅道会</span></div>
-                        <div class="class-time">18:30〜19:30</div>
-                    </div>
-                </label>
-            </div>
+            <span class="day-label">【水曜日】</span>
+            <label class="class-option">
+                <input type="radio" name="location" value="水曜：西部協働センター【流拳會】（17:30-18:30）">
+                <div class="class-card">
+                    <div class="class-header"><span class="class-name">西部協働センター</span><span class="style-badge badge-ryuken">流拳會</span></div>
+                    <div class="class-time">17:30〜18:30</div>
+                </div>
+            </label>
+            <label class="class-option">
+                <input type="radio" name="location" value="水曜：積志協働センター【武心館】（17:30-18:30）">
+                <div class="class-card">
+                    <div class="class-header"><span class="class-name">積志協働センター</span><span class="style-badge badge-bushin">武心館</span></div>
+                    <div class="class-time">17:30〜18:30</div>
+                </div>
+            </label>
+            <label class="class-option">
+                <input type="radio" name="location" value="水曜：北部協働センター【禅道会】（17:30-18:30）">
+                <div class="class-card">
+                    <div class="class-header"><span class="class-name">北部協働センター</span><span class="style-badge badge-zendo">禅道会</span></div>
+                    <div class="class-time">17:30〜18:30</div>
+                </div>
+            </label>
 
-            <div class="day-group">
-                <span class="day-label">【金曜日】</span>
-                <label class="class-option">
-                    <input type="radio" name="location" value="金曜：高台協働センター【流拳會】（17:30-18:30）">
-                    <div class="class-card">
-                        <div class="class-header"><span class="class-name">高台協働センター</span><span class="style-badge badge-ryuken">流拳會</span></div>
-                        <div class="class-time">17:30〜18:30</div>
-                    </div>
-                </label>
-                <label class="class-option">
-                    <input type="radio" name="location" value="金曜：可美総合センター【禅道会】（17:30-18:30）">
-                    <div class="class-card">
-                        <div class="class-header"><span class="class-name">可美総合センター</span><span class="style-badge badge-zendo">禅道会</span></div>
-                        <div class="class-time">17:30〜18:30</div>
-                    </div>
-                </label>
-            </div>
+            <span class="day-label">【木曜日】</span>
+            <label class="class-option">
+                <input type="radio" name="location" value="木曜：白脇協働センター【流拳會】（17:30-18:30）">
+                <div class="class-card">
+                    <div class="class-header"><span class="class-name">白脇協働センター</span><span class="style-badge badge-ryuken">流拳會</span></div>
+                    <div class="class-time">17:30〜18:30</div>
+                </div>
+            </label>
+            <label class="class-option">
+                <input type="radio" name="location" value="木曜：長鶴町道場【武心館】（18:00-19:00）">
+                <div class="class-card">
+                    <div class="class-header"><span class="class-name">長鶴町道場</span><span class="style-badge badge-bushin">武心館</span></div>
+                    <div class="class-time">18:00〜19:00</div>
+                </div>
+            </label>
+            <label class="class-option">
+                <input type="radio" name="location" value="木曜：大平台小学校体育館【禅道会】（18:30-19:30）">
+                <div class="class-card">
+                    <div class="class-header"><span class="class-name">大平台小学校体育館</span><span class="style-badge badge-zendo">禅道会</span></div>
+                    <div class="class-time">18:30〜19:30</div>
+                </div>
+            </label>
 
-            <div class="day-group">
-                <span class="day-label">【土曜日】</span>
-                <label class="class-option">
-                    <input type="radio" name="location" value="土曜：長鶴町道場【武心館】（10:00-11:00）">
-                    <div class="class-card">
-                        <div class="class-header"><span class="class-name">長鶴町道場</span><span class="style-badge badge-bushin">武心館</span></div>
-                        <div class="class-time">10:00〜11:00</div>
-                    </div>
-                </label>
-                <label class="class-option">
-                    <input type="radio" name="location" value="土曜：冨塚協働センター【流拳會】（13:00-16:00）">
-                    <div class="class-card">
-                        <div class="class-header"><span class="class-name">冨塚協働センター</span><span class="style-badge badge-ryuken">流拳會</span></div>
-                        <div class="class-time">13:00〜16:00</div>
-                    </div>
-                </label>
-                <label class="class-option">
-                    <input type="radio" name="location" value="土曜：庄内協働センター【禅道会】（16:30-17:30）">
-                    <div class="class-card">
-                        <div class="class-header"><span class="class-name">庄内協働センター</span><span class="style-badge badge-zendo">禅道会</span></div>
-                        <div class="class-time">16:30〜17:30</div>
-                    </div>
-                </label>
-            </div>
+            <span class="day-label">【金曜日】</span>
+            <label class="class-option">
+                <input type="radio" name="location" value="金曜：高台協働センター【流拳會】（17:30-18:30）">
+                <div class="class-card">
+                    <div class="class-header"><span class="class-name">高台協働センター</span><span class="style-badge badge-ryuken">流拳會</span></div>
+                    <div class="class-time">17:30〜18:30</div>
+                </div>
+            </label>
+            <label class="class-option">
+                <input type="radio" name="location" value="金曜：可美総合センター【禅道会】（17:30-18:30）">
+                <div class="class-card">
+                    <div class="class-header"><span class="class-name">可美総合センター</span><span class="style-badge badge-zendo">禅道会</span></div>
+                    <div class="class-time">17:30〜18:30</div>
+                </div>
+            </label>
+
+            <span class="day-label">【土曜日】</span>
+            <label class="class-option">
+                <input type="radio" name="location" value="土曜：長鶴町道場【武心館】（10:00-11:00）">
+                <div class="class-card">
+                    <div class="class-header"><span class="class-name">長鶴町道場</span><span class="style-badge badge-bushin">武心館</span></div>
+                    <div class="class-time">10:00〜11:00</div>
+                </div>
+            </label>
+            <label class="class-option">
+                <input type="radio" name="location" value="土曜：冨塚協働センター【流拳會】（13:00-16:00）">
+                <div class="class-card">
+                    <div class="class-header"><span class="class-name">冨塚協働センター</span><span class="style-badge badge-ryuken">流拳會</span></div>
+                    <div class="class-time">13:00〜16:00</div>
+                </div>
+            </label>
+            <label class="class-option">
+                <input type="radio" name="location" value="土曜：庄内協働センター【禅道会】（16:30-17:30）">
+                <div class="class-card">
+                    <div class="class-header"><span class="class-name">庄内協働センター</span><span class="style-badge badge-zendo">禅道会</span></div>
+                    <div class="class-time">16:30〜17:30</div>
+                </div>
+            </label>
 
         </div>
 
@@ -339,49 +349,57 @@
             ※お申し込み内容を確認後、担当者より詳細をご案内いたします。
         </div>
 
-        <button type="button" onclick="sendReservation()">予約内容を確認して送信</button>
+        <button type="button" class="submit-btn" onclick="sendReservation()">予約内容を確認して送信</button>
     </form>
 </div>
 
+<div id="customModal">
+    <div class="modal-content">
+        <p id="modalMsg" class="modal-message"></p>
+        <button type="button" class="modal-btn" id="modalOkBtn">OK</button>
+    </div>
+</div>
+
 <script>
-    liff.init({
-        liffId: "2009941460-m7lLdumu" 
-    }).then(() => {
-        if (!liff.isLoggedIn()) {
-            liff.login();
-        }
+    liff.init({ liffId: "2009941460-m7lLdumu" }).then(() => {
+        if (!liff.isLoggedIn()) { liff.login(); }
     });
+
+    function showModal(msg, closeLiff) {
+        const modal = document.getElementById('customModal');
+        const modalBtn = document.getElementById('modalOkBtn');
+        document.getElementById('modalMsg').innerText = msg;
+        modal.style.display = 'flex';
+        
+        modalBtn.onclick = function() {
+            modal.style.display = 'none';
+            if (closeLiff) { liff.closeWindow(); }
+        };
+    }
 
     function sendReservation() {
         const name = document.getElementById('childName').value;
         const age = document.getElementById('childAge').value;
         const date = document.getElementById('visitDate').value;
         const tel = document.getElementById('tel').value;
-        
-        const locationElement = document.querySelector('input[name="location"]:checked');
-        const location = locationElement ? locationElement.value : '';
+        const locEl = document.querySelector('input[name="location"]:checked');
+        const location = locEl ? locEl.value : '';
 
         if (!name || !age || !date || !location || !tel) {
-            alert('すべての項目を入力・選択してください。');
+            showModal('すべての項目を入力・選択してください。', false);
             return;
         }
 
-        const details = `①お子さんの氏名：${name}\n` +
-                        `②お子さんの年齢：${age}歳\n` +
-                        `③希望日：${date}\n` +
-                        `④希望場所・時間：${location}\n` +
-                        `⑤ご連絡先：${tel}`;
-
+        const details = `①お子さんの氏名：${name}\n②お子さんの年齢：${age}歳\n③希望日：${date}\n④希望場所・時間：${location}\n⑤ご連絡先：${tel}`;
         const keyword = `【体験＆見学のご予約】`;
 
         liff.sendMessages([
             { type: 'text', text: details },
             { type: 'text', text: keyword }
         ]).then(() => {
-            alert('予約情報を送信しました。');
-            liff.closeWindow();
-        }).catch((err) => {
-            alert('送信に失敗しました。');
+            showModal('予約情報を送信しました。', true);
+        }).catch(() => {
+            showModal('送信に失敗しました。LINEアプリ内でお試しください。', false);
         });
     }
 </script>
