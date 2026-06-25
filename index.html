@@ -71,7 +71,6 @@
             font-weight: bold;
         }
 
-        /* 教育理念の簡易表示 */
         .concept-summary {
             background: #fffdf0;
             border: 1px solid var(--box-border);
@@ -92,7 +91,6 @@
             color: var(--text-black);
         }
 
-        /* バー（セレクトボックス）のデザイン */
         input[type="text"], input[type="number"], input[type="tel"], select {
             width: 100%;
             padding: 12px;
@@ -152,7 +150,6 @@
             background-color: #fff8f1;
         }
 
-        /* グレーアウト（無効）スタイル */
         .class-option input[type="radio"]:disabled + .class-card {
             background-color: #f5f5f5;
             border-color: #e0e0e0;
@@ -218,7 +215,6 @@
         .modal-btn { background: var(--primary-orange); color: #fff; border: none;
             padding: 10px 40px; border-radius: 25px; font-weight: bold; cursor: pointer; }
 
-        /* --- 確認画面・完了画面用スタイル --- */
         .confirm-table {
             width: 100%;
             border-collapse: collapse;
@@ -300,7 +296,7 @@
 
             <div class="form-group">
                 <label for="childAge">お子さんの年齢</label>
-                <input type="number" id="childAge" min="3" max="15" required>
+                <input type="number" id="childAge" required>
             </div>
 
             <div class="form-group">
@@ -315,6 +311,12 @@
             <div class="form-group">
                 <label for="tel">ご連絡先 (電話番号)</label>
                 <input type="tel" id="tel" required>
+            </div>
+
+            <div class="form-group">
+                <label for="notes">備考欄</label>
+                <span style="display:block; font-size:0.8rem; color:#555; margin-bottom:5px;">ご兄弟が体験される場合、コチラにお名前と年齢をご記入ください。</span>
+                <input type="text" id="notes">
             </div>
 
             <div class="form-group">
@@ -449,6 +451,7 @@
             <tr><th>希望場所</th><td id="confPlace"></td></tr>
             <tr><th>教室名称</th><td id="confClass"></td></tr>
             <tr><th>連絡先</th><td id="confTel"></td></tr>
+            <tr><th>備考欄</th><td id="confNotes" style="white-space: pre-wrap;"></td></tr>
         </table>
 
         <div class="btn-group">
@@ -489,17 +492,15 @@
         const dayIdx = date.getDay();
         const dayStr = dayNames[dayIdx];
 
-        // 稽古がない日（日・月）は除外
         if (dayIdx === 0 || dayIdx === 1) continue;
 
         const opt = document.createElement('option');
         opt.value = `${y}-${m}-${d}`;
         opt.text = `${m}月${d}日 (${dayStr})`;
-        opt.dataset.day = dayIdx; // 曜日番号を保存
+        opt.dataset.day = dayIdx;
         dateSelect.appendChild(opt);
     }
 
-    // 日付と教室の有効・無効を同期
     function syncDayAndClasses() {
         const selectedOption = dateSelect.options[dateSelect.selectedIndex];
         const dayNum = selectedOption.dataset.day; 
@@ -536,28 +537,24 @@
         };
     }
 
-    // 送信用のデータを一時保存する変数
     let bookingData = {};
 
-    // 入力内容を確認画面にセットして表示を切り替える
     function showConfirm() {
         const name = document.getElementById('childName').value;
         const age = document.getElementById('childAge').value;
         const dateVal = document.getElementById('visitDate').value;
         const telVal = document.getElementById('tel').value;
         const locEl = document.querySelector('input[name="location"]:checked');
+        const notesVal = document.getElementById('notes').value;
 
-        // 入力チェック
         if (!name || !age || !dateVal || !locEl || !telVal) {
-            showModal('すべての項目を入力・選択してください。', false);
+            showModal('すべての必須項目を入力・選択してください。', false);
             return;
         }
 
-        // --- 日付のフォーマット変換（例: 2026-6-16 → 2026年06月16日） ---
         const [y, m, d] = dateVal.split('-');
         const formattedDate = `${y}年${m.padStart(2, '0')}月${d.padStart(2, '0')}日`;
 
-        // --- 施設名 と 教室名称 の取得 ---
         const card = locEl.nextElementSibling;
         const placeName = card.querySelector('.class-name').innerText;
         const style = card.querySelector('.style-badge').innerText;
@@ -565,47 +562,41 @@
         const dayOfWeek = locEl.value.split('：')[0] + '日';
         const classNameFull = `【${style}】教室（${dayOfWeek}${time.replace('〜', '-')}）`; 
 
-        // 確認画面のテーブルにテキストをセット
         document.getElementById('confName').innerText = name;
         document.getElementById('confAge').innerText = age + '歳';
         document.getElementById('confDate').innerText = formattedDate;
         document.getElementById('confPlace').innerText = placeName;
         document.getElementById('confClass').innerText = classNameFull;
         document.getElementById('confTel').innerText = telVal;
+        document.getElementById('confNotes').innerText = notesVal.trim() ? notesVal : '特になし';
 
-        // 送信用にデータを変数に保存
         bookingData = {
             name: name,
             age: age,
             date: formattedDate,
             place: placeName,
             className: classNameFull,
-            tel: telVal
+            tel: telVal,
+            notes: notesVal.trim() ? notesVal : '特になし'
         };
 
-        // エリアの表示切り替え
         document.getElementById('inputArea').style.display = 'none';
         document.getElementById('confirmArea').style.display = 'block';
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // 確認画面から入力画面に戻る
     function hideConfirm() {
         document.getElementById('confirmArea').style.display = 'none';
         document.getElementById('inputArea').style.display = 'block';
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // 実際にLINEに送信する処理
     function executeSend() {
-        // 保存しておいた bookingData を使ってメッセージを組み立てる
-        const details = `【体験＆見学予約】\n①お子さんの氏名：${bookingData.name}\n②お子さんの年齢：${bookingData.age}歳\n③希望日：${bookingData.date}\n④希望場所：${bookingData.place}\n⑤教室名称：${bookingData.className}\n⑥ご連絡先：${bookingData.tel}`;
+        const details = `【体験＆見学予約】\n①お子さんの氏名：${bookingData.name}\n②お子さんの年齢：${bookingData.age}歳\n③希望日：${bookingData.date}\n④希望場所：${bookingData.place}\n⑤教室名称：${bookingData.className}\n⑥ご連絡先：${bookingData.tel}\n⑦備考（兄弟など）：\n${bookingData.notes}`;
 
-        // 【変更点】詳細メッセージ(details)のみの1つだけを送信（keywordの送信を削除）
         liff.sendMessages([
             { type: 'text', text: details }
         ]).then(() => {
-            // 送信成功時：完了画面へ切り替え
             document.getElementById('confirmArea').style.display = 'none';
             document.getElementById('completeArea').style.display = 'block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
